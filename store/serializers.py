@@ -1,8 +1,17 @@
 from rest_framework import serializers
-from .models import Product
+from .models import Product, Collection
 
 
 from decimal import Decimal
+
+
+class CollectionSerializer(serializers.Serializer):
+
+    id = serializers.IntegerField()
+    title = serializers.CharField(max_length=255)
+
+
+
 # Completely separate from the product class
 
 # Using this, we can go from (Product Object) --> Python Dictionary
@@ -20,3 +29,28 @@ class ProductSerializer(serializers.Serializer):
 
                       # decimal           # float
         return round(product.unit_price * Decimal(1.1),2)
+
+
+    # 3 ways to include related objects
+
+    # 1) PrimaryKeyRelatedField
+    # include pk (id) of each collection in Product object
+    # collection = serializers.PrimaryKeyRelatedField(
+    #     queryset=Collection.objects.all()
+    # )
+
+    # 2) StringRelatedField - returns the string representation of the object
+    # need to include .selectrelated('collection') in the views
+    # collection = serializers.StringRelatedField()
+
+    # 3) Use the serializer class of that object
+
+    # collection = CollectionSerializer()
+
+    # 4) Use HyperLink
+
+    collection = serializers.HyperlinkedRelatedField(
+        queryset=Collection.objects.all(),
+        view_name = 'collection-detail'
+    )
+
