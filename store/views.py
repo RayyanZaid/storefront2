@@ -1,7 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
+
+# from current folder
+from .models import Product
+from .serializers import ProductSerializer
+
 # Create your views here.
 
 
@@ -14,11 +21,40 @@ from rest_framework.response import Response
 @api_view()
 def product_list(request):
 
-    return Response('ok')
+    products_queryset = Product.objects.all().order_by("pk")
+
+    serializer = ProductSerializer(products_queryset, many=True)
+
+    productsDictionary = serializer.data
+    return Response(productsDictionary)
 
 
 
 @api_view()
 def product_detail(request, id):
+    
 
-    return Response(id)
+        product = get_object_or_404(Product, pk=id)
+
+        serializer = ProductSerializer(product)
+
+        productDictionary : dict = serializer.data
+        # this dictionary is converted to JSON object under the hood
+
+        return Response(productDictionary)
+    
+
+    
+
+    # try:
+    #     product = Product.objects.get(pk=id)
+
+    #     serializer = ProductSerializer(product)
+
+    #     productDictionary : dict = serializer.data
+    #     # this dictionary is converted to JSON object under the hood
+
+    #     return Response(productDictionary)
+    
+    # except Product.DoesNotExist:
+    #     return Response(status=status.HTTP_404_NOT_FOUND)
