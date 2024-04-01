@@ -91,11 +91,11 @@ WSGI_APPLICATION = 'storefront.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': os.getenv('LOCALHOST_ENGINE'),
         'NAME': 'storefront2',
         'HOST': 'localhost',
         'PORT': os.getenv('LOCALHOST_PORT'),
-        'USER': 'root',
+        'USER': os.getenv('LOCALHOST_USER'),
         'PASSWORD': os.getenv('LOCALHOST_ROOT_PASSWORD')
     }
 }
