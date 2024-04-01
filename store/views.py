@@ -4,6 +4,13 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 # Create your views here.
 
+
+
+# Serializer - Product object --> dict
+
+# REST Framework has class called JSON Renderer 
+    # Method: render(dict) --> JSON object
+    
 @api_view()
 def product_list(request):
 
