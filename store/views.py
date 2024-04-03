@@ -18,15 +18,28 @@ from .serializers import ProductSerializer
 # REST Framework has class called JSON Renderer 
     # Method: render(dict) --> JSON object
     
-@api_view()
+
+
+# Deserializing: When user types in info for a Product, convert that to product object for the database
+    # 1) Need to pass array of HTTP methods to API View Decorator (for the POST)
+
+@api_view(['GET' , 'POST'])
 def product_list(request):
 
-    products_queryset = Product.objects.select_related('collection').all().order_by("pk")
+    if request.method == 'GET':
+        products_queryset = Product.objects.select_related('collection').all().order_by("pk")
 
-    serializer = ProductSerializer(products_queryset, many=True, context={'request': request})
+        serializer = ProductSerializer(products_queryset, many=True, context={'request': request})
 
-    productsDictionary = serializer.data
-    return Response(productsDictionary)
+        productsDictionary = serializer.data
+        return Response(productsDictionary)
+
+    elif request.method == 'POST':
+        # Deserialize
+
+        deserializer = ProductSerializer(data=request.data)
+        # deserializer.validated_data
+        return Response('ok')
 
 
 
