@@ -81,3 +81,13 @@ class ProductSerializer(serializers.ModelSerializer):
 
                     # decimal           # float
         return round(product.unit_price * Decimal(1.1),2)
+    
+
+    # override the validate method in the serializer
+
+    def validate(self, data):
+
+        if data['unit_price'] < 2:
+            return serializers.ValidationError('Unit Price is less than $2')
+        
+        return data
