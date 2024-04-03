@@ -38,8 +38,14 @@ def product_list(request):
         # Deserialize
 
         deserializer = ProductSerializer(data=request.data)
-        # deserializer.validated_data
-        return Response('ok')
+
+        # Need to validate data
+
+        if deserializer.is_valid(raise_exception=True):
+            print(deserializer.validated_data)
+            return Response('ok')
+        
+    
 
 
 
