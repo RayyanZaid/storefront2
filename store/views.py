@@ -54,7 +54,7 @@ def product_list(request):
 
 # PUT - to update all fields
 # PATCH - to update subset of fields
-@api_view(['GET' , 'PUT' , 'PATCH'])
+@api_view(['GET' , 'PUT' , 'PATCH', 'DELETE'])
 def product_detail(request, id):
     
     # instance
@@ -80,6 +80,9 @@ def product_detail(request, id):
 
         return Response(deserializer.data)
     
+    elif request.method == 'DELETE':
+        product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     
 
