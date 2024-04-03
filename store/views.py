@@ -41,10 +41,14 @@ def product_list(request):
 
         # Need to validate data
 
-        if deserializer.is_valid(raise_exception=True):
-            print(deserializer.validated_data)
-            return Response('ok')
+        if deserializer.is_valid():
         
+            deserializer.save()
+            return Response('ok')
+        else:
+             
+            return Response(deserializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
     
 
 

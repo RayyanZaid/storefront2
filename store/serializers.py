@@ -72,7 +72,7 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
 
         # Django will auto create serializer
-        fields = ['id', 'title', 'unit_price', 'price_with_tax', 'collection']
+        fields = ['id', 'title', 'description', 'slug', 'inventory', 'unit_price', 'price_with_tax', 'collection']
 
     
     price_with_tax = serializers.SerializerMethodField(method_name="calculate_tax")
@@ -88,6 +88,23 @@ class ProductSerializer(serializers.ModelSerializer):
     def validate(self, data):
 
         if data['unit_price'] < 2:
-            return serializers.ValidationError('Unit Price is less than $2')
-        
+            raise serializers.ValidationError({'unit_price': 'Unit Price must be at least $2.'})
         return data
+    
+
+
+    # override the create method
+
+    # create method is called by the .save() method
+    # def create(self, validated_data):
+    #     product : Product = Product(**validated_data)
+    #     product.other = 1
+    #     product.save()
+
+    #     return product
+    
+
+    # def update(self, instance, validated_data):
+    #     instance.unit_price = validated_data.get('unit_price')
+    #     instance.save()
+    #     return instance
