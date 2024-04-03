@@ -44,7 +44,7 @@ def product_list(request):
         if deserializer.is_valid():
         
             deserializer.save()
-            return Response('ok')
+            return Response(deserializer.data, status=status.HTTP_201_CREATED)
         else:
              
             return Response(deserializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -52,12 +52,17 @@ def product_list(request):
     
 
 
-
-@api_view()
+# PUT - to update all fields
+# PATCH - to update subset of fields
+@api_view(['GET' , 'PUT' , 'PATCH'])
 def product_detail(request, id):
     
+    # instance
 
-        product = get_object_or_404(Product, pk=id)
+    product = get_object_or_404(Product, pk=id)
+
+    if request.method == 'GET':    
+        
 
         serializer = ProductSerializer(product,context={'request': request})
 
@@ -65,6 +70,15 @@ def product_detail(request, id):
         # this dictionary is converted to JSON object under the hood
 
         return Response(productDictionary)
+
+    elif request.method == 'PUT':
+
+        # pass product instance
+        deserializer = ProductSerializer(product, data=request.data)
+        deserializer.is_valid(raise_exception=True)
+        deserializer.save()
+
+        return Response(deserializer.data)
     
 
     
